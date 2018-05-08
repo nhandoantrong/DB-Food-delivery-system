@@ -6,12 +6,7 @@ public class Dish {
     private Food food;
     private Float price;
 
-    public Dish(Menu menu, Food food, Float price) {
-        this.menu = menu;
-        this.food = food;
-        this.price = price;
-    }
-
+   
     public Dish(Integer ID, Menu menu, Food food, Float price) {
 
         this.ID = ID;

@@ -14,6 +14,20 @@ public class OrderAttribute
 	        this.customer = customer;
 	        this.stage = stage;
 	    }
+		public OrderAttribute(Integer  customer, String stage) {
+			
+	        this.id = null;
+
+	        this.customer = customer;
+	        this.stage = stage;
+	    }
+		public OrderAttribute(Integer  customer) {
+			
+	        this.id = null;
+
+	        this.customer = customer;
+	        this.stage = "Received";
+	    }
 		public Integer getId() {
 			return id;
 		}
@@ -28,6 +42,9 @@ public class OrderAttribute
 		}
 		public String getCustomer() {
 			return Database.getInstance().getCustomer(customer).getName();
+		}
+		public Integer getCustomerID() {
+			return customer;
 		}
 		public void setCustomer(Integer customer) {
 			this.customer = customer;

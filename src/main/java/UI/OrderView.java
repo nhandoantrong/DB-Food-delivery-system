@@ -65,7 +65,7 @@ public class OrderView extends Application {
     ArrayList<String> menuButton=new ArrayList<String>();
     ArrayList<DishQuantity> list =new ArrayList<DishQuantity>();
 	TableView <DishQuantity> table= new TableView<DishQuantity>();
-    
+	ObservableList<DishQuantity> data;
     Button buttonDish[]=new Button[6];
     GridPane dishSet = new GridPane();
     int menuPage=1;
@@ -83,10 +83,12 @@ public class OrderView extends Application {
     	public Quantity(Dish dish)
     	{
     		this.dish=dish;
+    		System.out.println(dish.getFood().getName());
     	}
     	@Override
     	public void start(Stage stage)  {
     		
+    		System.out.println(dish.getFood().getName());
     		GridPane gridPane2= new GridPane();
     		gridPane2.setVgap(5);
     		gridPane2.add(quantityLable, 0, 0);
@@ -103,17 +105,18 @@ public class OrderView extends Application {
             	  quantity=Integer.valueOf(quantityText.getText());
             	  System.out.println(quantity);
             	  stage.close();
-            	  list.add(new DishQuantity(dish.getFood().getName(),quantity,dish.getPrice()));
+            	  list.add(new DishQuantity(dish,quantity));
             	  System.out.print(list.size());
-				ObservableList<DishQuantity> data =FXCollections.observableArrayList(list);
+				data =FXCollections.observableArrayList(list);
           	  System.out.println(data.size());
 				table.setItems(data);
-	    		stage.show();
+	    		
 
      	
               } 
            });
     		gridPane2.add(confirm, 0, 2);
+    		stage.show();
 
     	}
     }
@@ -273,44 +276,6 @@ public class OrderView extends Application {
 			
 		}
     }
-	private class DishQuantity
-	{
-		String dish;
-		Integer quantity;
-		Float price;
-		public DishQuantity(String dish, Integer quantity,Float price)
-		{
-			this.dish=dish;
-			this.quantity=quantity;
-			this.price=price;
-		}
-
-		public String getDish() {
-			return dish;
-		}
-
-		public void setDish(String dish) {
-			this.dish = dish;
-		}
-
-		public Integer getQuantity() {
-			return quantity;
-		}
-
-		public void setQuantity(Integer quantity) {
-			this.quantity = quantity;
-		}
-
-		public Float getPrice() {
-			return price;
-		}
-
-		public void setPrice(Float price) {
-			this.price = price;
-		}
-		
-	}
-	
 	
 		@Override 
    public void start(Stage stage) {    
@@ -349,6 +314,7 @@ public class OrderView extends Application {
 			for (int i=0;i<6;i++)
 			{
 				buttonMenu[i]=new Button(menuButton.get(i));
+    		  	buttonMenu[i].setOnMouseClicked(new MenuHandle(menuList.get(i)));	
 				buttonMenu[i].setMaxSize(1000, 1000);
 				buttonMenu[i].setMinSize(100, 100);
 			}
@@ -401,8 +367,30 @@ public class OrderView extends Application {
 		//confirm button
 		//---------------------------------------------
 		confirm.setMinSize(100, 100);
-		
-		
+		 confirm.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() { 
+			 Dish dish;
+				Integer quantity;
+				OrderAttribute order;
+				ArrayList<OrderAttribute> list =new ArrayList<OrderAttribute>();
+				@Override
+				public void handle(MouseEvent arg0) {
+					order=new OrderAttribute(customer.getId());
+					Database.getInstance().createOrder(order);
+					list=Database.getInstance().getOrders();
+					order=list.get(list.size()-1);
+					for (int i=0;i<data.size();i++)
+					{
+						dish=data.get(i).getRealDish();
+						quantity=data.get(i).getQuantity();
+						System.out.println("dish ID: "+ dish.getID());
+						for (int j=0;j<quantity;j++)
+						{
+							order.addDish(dish);
+						}
+					}
+					stage.close();
+				}
+		 });
 		
 		//-------------------------------
 		
@@ -424,6 +412,11 @@ public class OrderView extends Application {
 		table.getColumns().addAll(name,quanti,price);
 		table.setEditable(true);
 		//---------------------------
+		
+		
+		
+		
+		
       //Setting size for the pane 
       gridPane.setMinSize(720, 720); 
    

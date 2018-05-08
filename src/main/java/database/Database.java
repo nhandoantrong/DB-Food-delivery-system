@@ -113,7 +113,8 @@ public class Database {
         rs.beforeFirst();
         ArrayList<Dish> dishes = new ArrayList<>();
         while (rs.next()) {
-            dishes.add(new Dish(getMenu(rs.getInt("Dish.MenuID")),
+            dishes.add(new Dish(rs.getInt("Dish.ID"),
+            					getMenu(rs.getInt("Dish.MenuID")),
                                 getFood(rs.getInt("Dish.FoodID")),
                                 rs.getFloat("Dish.Price")));
         }
@@ -213,7 +214,7 @@ public class Database {
         return query("SELECT * FROM DISH WHERE MenuID = " + menu.getId(),
                      "dish");
     }
-
+    
     public ArrayList getDishes(OrderAttribute order) {
         return query("SELECT * FROM DISH,contains " +
                      "WHERE contains.OrderID = " + order.getId(),
@@ -288,13 +289,13 @@ public class Database {
     }
 
     public Boolean createOrder(OrderAttribute order) {
-        return update("INSERT INTO Food (CustomerID,StageStr) " +
-                      "VALUES (" + order.getCustomer() + "," + order.getStage() + ")");
+        return update("INSERT INTO `Order` (CustomerID,StageStr) " +
+                      "VALUES (" + order.getCustomerID() + ",'" + order.getStage() + "')");
     }
 
     public boolean addDishToOrder(OrderAttribute order, Dish dish) {
         return update("INSERT INTO contains (OrderID, DishID) " +
-                      "VALUES (" + order.getId() + "," + dish.getID());
+                      "VALUES (" + order.getId() + "," + dish.getID()+")");
     }
 
     public boolean removeDishFromOrder(OrderAttribute order, Dish dish) {
@@ -312,7 +313,7 @@ public class Database {
                       "StageStr = '" + order.getStage() + "' " +
                       "WHERE `ID`='" + order.getId());
     }
-
+    
     /**
      * MATERIAL RELATED METHODS
      */
