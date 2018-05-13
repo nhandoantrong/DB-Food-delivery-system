@@ -330,7 +330,7 @@ public class Database {
 
     public boolean createMaterial(Material material) {
         return update("INSERT INTO Material (MaterialStr, UnitPrice) " +
-                      "VALUES (" + material.getName() + "," + material.getUnitPrice());
+                      "VALUES ('" + material.getName() + "'," + material.getUnitPrice()+")");
     }
 
     public boolean deleteMaterial(Material material) {
@@ -340,7 +340,7 @@ public class Database {
 
     public boolean updateMaterial(Material material) {
         return update("UPDATE Material SET " +
-                      "MaterialStr = " + material.getName() + "," +
+                      "MaterialStr = '" + material.getName() + "'," +
                       "UnitPrice = " + material.getUnitPrice() + " " +
                       "WHERE ID = " + material.getId());
     }

@@ -186,7 +186,9 @@ public class MaterialsView extends Application {
 		delete.setMinSize(100, 100);
 		table.getColumns().addAll(id, name, unitPrice);
 		table.setEditable(true);
-		
+		list=Database.getInstance().getMaterials();
+		ObservableList<Material> data =FXCollections.observableArrayList(list);
+		table.setItems(data);
 		System.out.println(list.size());
 		
 		
